@@ -1,0 +1,247 @@
+angular.module('app', ['onsen', 'uiSwitch']);
+
+    angular.module('app').controller('AppController', function($scope) {
+
+	  $scope.enableAuto = function() {
+		  console.log(($scope.ashots_made + $scope.ashots_missed) % 4);
+		if(($scope.ashots_made + $scope.ashots_missed < 4) || $scope.auto_intaked)
+		{
+			autoMade.setDisabled(false);
+			autoMissed.setDisabled(false);
+			autoShot.setDisabled(true);
+		}
+		else
+		{
+			if(!$scope.auto_intaked)
+			{
+		ons.notification.confirm({
+		  message: 'Did They Intake A Stack?',
+		  title: 'Auto Check',
+		  buttonLabels: ['No', 'Yes'],
+		  animation: 'default', // or 'none'
+		  primaryButtonIndex: 1,
+		  cancelable: false,
+		  callback: function(index) {
+			if(index)
+			{
+				$scope.auto_intaked = 1;
+				$scope.stack_in++;
+				autoMade.setDisabled(false);
+				autoMissed.setDisabled(false);
+				autoShot.setDisabled(true);
+			}
+		  }
+		});
+		
+	}
+	}
+	if($scope.ashots_made + $scope.ashots_missed % 4 == 0)
+	{
+		$scope.auto_intaked = 0;
+	}
+		
+	  }; 
+	  $scope.disableAuto = function(made) {
+		autoMade.setDisabled(true);
+		autoMissed.setDisabled(true);
+		autoShot.setDisabled(false);
+		if(made)
+		{
+			$scope.balls_intaked--;
+			$scope.ashots_made++;
+		}
+		else
+		{
+			$scope.balls_intaked--;
+			$scope.ashots_missed++;
+		} 
+		if(($scope.ashots_made + $scope.ashots_missed) % 4 == 0)
+		{
+			$scope.auto_intaked = 0;
+			
+		}
+	  };
+	   $scope.enableDriver = function() {
+			driverMade.setDisabled(false);
+			driverMissed.setDisabled(false);
+			driverShot.setDisabled(true);
+		};
+	  $scope.intakedStack = function()
+	  {
+		  ons.notification.confirm({
+		  message: 'Did They Intake A Stack?',
+		  // or messageHTML: '<div>Message in HTML</div>',
+		  title: 'Intake Check',
+		  buttonLabels: ['No', 'Yes'],
+		  animation: 'default', // or 'none'
+		  primaryButtonIndex: 1,
+		  cancelable: false,
+		  callback: function(index) {
+			if(index )
+			{
+				$scope.stack_in++;
+				$scope.balls_intaked = 4;
+			}
+		  }
+		});
+	  };
+	  $scope.intakedCheckStack = function()
+	  {
+		  ons.notification.confirm({
+		  message: 'Did They Intake A Stack?',
+		  // or messageHTML: '<div>Message in HTML</div>',
+		  title: 'Intake Check',
+		  buttonLabels: ['No', 'Field', 'Human'],
+		  animation: 'default', // or 'none'
+		  primaryButtonIndex: 1,
+		  cancelable: false,
+		  callback: function(index) {
+			if(index )
+			{
+				$scope.balls_intaked = 4;
+			}
+			if(index == 1)
+			{
+				$scope.stack_in++;
+			}
+		  }
+		});
+	  };
+	  $scope.intakedHStack = function()
+	  {
+		  ons.notification.confirm({
+		  message: 'Did They Intake A Stack?',
+		  // or messageHTML: '<div>Message in HTML</div>',
+		  title: 'Intake Check',
+		  buttonLabels: ['No', 'Yes'],
+		  animation: 'default', // or 'none'
+		  primaryButtonIndex: 1,
+		  cancelable: false,
+		  callback: function(index) {
+			if(index )
+			{
+				$scope.balls_intaked = 4;
+			}
+		  }
+		});
+	  };
+	  $scope.disableDriver = function(made) {
+		driverMade.setDisabled(true);
+		driverMissed.setDisabled(true);
+		driverShot.setDisabled(false);
+			if(made)
+			{
+				$scope.dshots_made++;
+			}
+			else
+			{
+				$scope.dshots_missed++;
+			}
+	  };
+	  $scope.askQ = function(title, question, options)
+	  {
+		  var i ;
+		  ons.notification.confirm({
+		  message: question,
+		  title: title,
+		  buttonLabels: options,
+		  animation: 'default', // or 'none'
+		  primaryButtonIndex: 1,
+		  cancelable: false,
+		  callback: function(index) {
+			$scope.returnValue = index;
+			$scope.newDialog = 1;
+		  },
+		  
+		});
+	  };
+	  $scope.disable_all = function()
+	  {
+		  driverMade.setDisabled(true);
+		  driverMissed.setDisabled(true);
+		  driverShot.setDisabled(true);
+		  autoMade.setDisabled(true);
+		  autoMissed.setDisabled(true);
+		  autoShot.setDisabled(true);
+		  btn_elevated.setDisabled(true);
+	  }
+	  	   $scope.aa = function() {
+			driverMade.setDisabled(false);
+			driverMissed.setDisabled(false);
+			driverShot.setDisabled(true);
+		};
+	$scope.finishScout = function() {
+
+ $scope.aa();
+        $scope.newDialog = 0;
+        ons.notification.confirm({
+                message: "Was The Team Disabled?",
+                title: "Finish Scout",
+                buttonLabels: ['No', 'Yes'],
+                animation: 'default', // or 'none'
+                primaryButtonIndex: 1,
+                cancelable: false,
+                callback: function(index) {
+                    $scope.disabled = index;
+                    $scope.newDialog = 1;
+                    cont = 1;
+                    ons.notification.confirm({
+                                message: "Did the Alliance Complete an Elevation?",
+                                title: "Finish Scout",
+                                buttonLabels: ['No', 'Yes'],
+                                animation: 'default', // or 'none'
+                                primaryButtonIndex: 1,
+                                cancelable: false,
+                                callback: function(index) {
+                                    $scope.elevated = index;
+                                    if (index) {
+                                        ons.notification.confirm({
+                                            message: 'What was the Height of the Elevation?',
+                                            // or messageHTML: '<div>Message in HTML</div>',
+                                            title: 'Finish Scout',
+                                            buttonLabels: ['Low', 'High'],
+                                            animation: 'default', // or 'none'
+                                            primaryButtonIndex: 1,
+                                            cancelable: false,
+                                            callback: function(index) {
+                                                $scope.eleheight = index + 1;
+                                                ons.notification.confirm({
+                                                    message: 'What did they do for the Elevation?',
+                                                    // or messageHTML: '<div>Message in HTML</div>',
+                                                    title: 'Finish Scout',
+                                                    buttonLabels: ['Elevator', 'Elevatee'],
+                                                    animation: 'default', // or 'none'
+                                                    primaryButtonIndex: 1,
+                                                    cancelable: true,
+                                                    callback: function(index) {
+                                                        $scope.elestatus = index + 1;
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    } else {
+                                        $scope.eleheight = -1;
+                                        $scope.elestatus = -1;
+                                    }
+								}
+
+                                });
+                            
+									
+
+                        }
+
+                });
+
+                
+        };
+	  $scope.dshots_made = 0;
+	  $scope.dshots_missed = 0;
+	  $scope.ashots_made = 0;
+	  $scope.ashots_missed = 0;
+	  $scope.alow_goal = 0;
+	  $scope.dlow_goal = 0;
+	  $scope.auto_intaked = 1;
+	  $scope.stack_in = 0;
+	  $scope.balls_intaked = 4;
+    });
